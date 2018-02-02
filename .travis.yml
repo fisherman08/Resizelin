@@ -1,0 +1,13 @@
+language: java
+
+sudo: required
+dist: trusty
+
+jdk:
+  - openjdk7
+  - openjdk8
+  
+branches:
+  only:
+  - master
+  - develop
