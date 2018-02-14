@@ -12,7 +12,7 @@ import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.roundToInt
 
-// TODO ファイルの存在確認や画像ファイルかどうかの確認などをもっと真面目に実装する
+
 class ImageResizer {
     private val imageFile: ByteArray
 

@@ -9,14 +9,18 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotSame
+import java.io.ByteArrayInputStream
 import java.io.File
+import javax.imageio.ImageIO
 
 class ImageResizerSpec :Spek({
-    describe("image risezer") {
+    describe("image resizer") {
         val testFileName = "/imageResizer/test.jpg"
 
         fun testResizer(resizer :ImageResizer) {
-            assertNotSame(0, resizer.resize(100).size)
+            val resized = resizer.resize(width = 100)
+            assertEquals(100, ImageIO.read(ByteArrayInputStream(resized)).width)
+            assertNotSame(0, resized.size)
         }
 
         on("initialize with byte array") {
