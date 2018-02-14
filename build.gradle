@@ -1,7 +1,7 @@
 import org.junit.platform.console.options.Details
 
 group 'com.kyproj'
-version '0.1.1'
+version '0.1.2'
 
 buildscript {
     ext.kotlin_version = '1.2.10'
@@ -45,11 +45,11 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.6"
 }
-
-jar {
-    archiveName  = "resizelin-${version}.$extension"
-    destinationDir file("release")
-}
+//
+//jar {
+//    archiveName  = "resizelin-${version}.$extension"
+//    destinationDir file("release")
+//}
 
 junitPlatform {
     platformVersion junitGradlePluginVersion
@@ -59,6 +59,14 @@ junitPlatform {
             include 'spek'
         }
     }
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives sourcesJar
 }
 
 def repo = new File(rootDir, "repository")
