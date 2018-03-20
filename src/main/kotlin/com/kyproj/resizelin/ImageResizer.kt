@@ -34,29 +34,50 @@ class ImageResizer {
     fun resize(width: Int): ByteArray {
 
         // オリジナルのファイルを読み込む
-        val original = ImageIO.read(ByteArrayInputStream(imageFile)) ?: throw Exception("File is invalid")
-        val originalWidth  = original.width.toDouble()
-        val originalHeight = original.height.toDouble()
+        val byteArrayStream = ByteArrayInputStream(imageFile)
+        val input = ImageIO.createImageInputStream(byteArrayStream)
+        val readers = ImageIO.getImageReaders(input)
 
-        // リサイズ後のファイルを作成
-        val resizedWidth  = width.toDouble()
-        val resizedHeight = width * originalHeight / originalWidth
-        val resized = BufferedImage(resizedWidth.roundToInt(), resizedHeight.roundToInt(), original.type)
+        try {
 
-        // 変換器
-        val transformer = AffineTransformOp(
-                AffineTransform.getScaleInstance( resizedWidth / originalWidth, resizedHeight / originalHeight)
-                , AffineTransformOp.TYPE_BILINEAR
-        )
+            if(!readers.hasNext()) {
+                return ByteArray(0)
+            }
 
-        // 変換
-        transformer.filter(original, resized)
+            val reader = readers.next()
+            reader.input = input
+            val original = reader.read(0) ?: throw Exception("File is invalid")
+            val originalWidth  = original.width.toDouble()
+            val originalHeight = original.height.toDouble()
+            val originalFormat = reader.formatName
 
-        // 変換した結果を書き込む
-        val result = ByteArrayOutputStream()
-        ImageIO.write(resized, "jpg", result)
+            // リサイズ後のファイルを作成
+            val resizedWidth  = width.toDouble()
+            val resizedHeight = width * originalHeight / originalWidth
+            val resized = BufferedImage(resizedWidth.roundToInt(), resizedHeight.roundToInt(), original.type)
 
-        return result.toByteArray()
+            // 変換器
+            val transformer = AffineTransformOp(
+                    AffineTransform.getScaleInstance( resizedWidth / originalWidth, resizedHeight / originalHeight)
+                    , AffineTransformOp.TYPE_BILINEAR
+            )
+
+            // 変換
+            transformer.filter(original, resized)
+
+            // 変換した結果を書き込む
+            val result = ByteArrayOutputStream()
+            ImageIO.write(resized, originalFormat, result)
+
+            return result.toByteArray()
+
+        } catch (e: Exception) {
+            throw e
+        } finally {
+            input.close()
+            byteArrayStream.close()
+        }
+
     }
 
 }
