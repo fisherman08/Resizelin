@@ -46,7 +46,7 @@ class ImageResizer {
 
             val reader = readers.next()
             reader.input = input
-            val original = reader.read(0) ?: throw Exception("File is invalid")
+            val original = reader.read(0) ?: throw InvalidFileException("File is invalid")
             val originalWidth  = original.width.toDouble()
             val originalHeight = original.height.toDouble()
             val originalFormat = reader.formatName
@@ -79,5 +79,8 @@ class ImageResizer {
         }
 
     }
+
+
+    class InvalidFileException(message: String): Exception(message)
 
 }
