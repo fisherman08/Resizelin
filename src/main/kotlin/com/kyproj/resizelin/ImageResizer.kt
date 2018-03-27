@@ -72,7 +72,7 @@ class ImageResizer {
             return result.toByteArray()
 
         } catch (e: Exception) {
-            throw e
+            throw InvalidFileException("failed to resize", e)
         } finally {
             input.close()
             byteArrayStream.close()
@@ -81,6 +81,10 @@ class ImageResizer {
     }
 
 
-    class InvalidFileException(message: String): Exception(message)
+    class InvalidFileException: Exception{
+        constructor(message: String) :super(message)
+        constructor(e: Exception) : super(e.cause)
+        constructor(message: String, e: Exception) :super(message, e)
+    }
 
 }
