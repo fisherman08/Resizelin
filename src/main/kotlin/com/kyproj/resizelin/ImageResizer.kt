@@ -84,7 +84,7 @@ class ImageResizer {
     class InvalidFileException: Exception{
         constructor(message: String) :super(message)
         constructor(e: Exception) : super(e.cause)
-        constructor(message: String, e: Exception) :super(message, e)
+        constructor(message: String, e: Exception) :super(message, e.cause)
     }
 
 }
